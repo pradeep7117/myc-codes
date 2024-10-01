@@ -1,0 +1,164 @@
+#include <iostream>
+#include <vector>
+using namespace std;
+
+// Node class to represent each element in the linked list
+class Node {
+public:
+    int data;      // Data stored in the node
+    Node* next;    // Pointer to the next node in the linked list
+
+    // Constructor to initialize the node with data and the next pointer
+    Node(int data1, Node* next1 = nullptr) {
+        data = data1;
+        next = next1;
+    }
+};
+
+// Function to print the elements of the linked list
+void printLL(Node* head) {
+    while (head != nullptr) {
+        cout << head->data << " ";
+        head = head->next;
+    }
+    cout << endl;
+}
+
+// Function to remove the head node from the linked list
+Node* removeHead(Node* head) {
+    if (head == nullptr) return nullptr; // If the list is empty, return nullptr
+    Node* temp = head;     // Store the current head in a temporary pointer
+    head = head->next;     // Move the head to the next node
+    delete temp;           // Delete the old head
+    return head;           // Return the new head
+}
+Node* removetail(Node* head){
+    if (head == nullptr || head->next==nullptr) return nullptr;
+    Node* temp=head;
+    while(temp->next->next!= nullptr){
+        temp=temp->next;
+    }
+    delete temp->next;
+    temp->next= nullptr;
+    return  head;
+}
+Node* removeK(Node* head, int k) {
+    if(head == NULL) return head;
+    if(k == 1) {
+        Node* temp = head;
+        head = head->next;
+        free(temp);
+        return head;
+    }
+
+    int cnt = 0;
+    Node* temp = head;
+    Node* prev = NULL;
+    while(temp != NULL) {
+        cnt++;
+        if(cnt == k) {
+            prev->next = prev->next->next;
+            free(temp);
+            break;
+        }
+        prev = temp;
+        temp = temp->next;
+    }
+    return head;
+}
+Node* removeel(Node* head, int el) {
+    if(head == NULL) return head;
+    if(head->data==el) {
+        Node* temp = head;
+        head = head->next;
+        free(temp);
+        return head;
+    }
+    Node* temp = head;
+    Node* prev = NULL;
+    while(temp != NULL) {
+        if(temp->data==el) {
+            prev->next = prev->next->next;
+            free(temp);
+            break;
+        }
+        prev = temp;
+        temp = temp->next;
+    }
+    return head;
+}
+Node* newhead(Node*head,int val){
+    Node *temp=new Node(val,head);
+    return temp;
+}
+Node* newtail(Node*head,int val){
+    if(head== nullptr){
+        return new Node(val);
+    }
+    Node *temp=head;
+    while(temp->next!= nullptr){
+        temp=temp->next;
+    }
+    Node *temp1=new Node(val);
+    temp->next=temp1;
+    return head;
+}
+Node* newpos(Node*head,int el,int k){
+    if(head== nullptr){
+        if(k==1){
+            return new Node(el);
+        }
+        else{
+            return head;
+        }
+    }
+    if(k==1){
+        return new Node(el,head);
+    }
+    int cnt=0;
+
+    Node *temp=head;
+    while(temp!= nullptr){
+        cnt++;
+        if (cnt==(k-1)){
+            Node* x=new Node(el,temp->next);
+            temp->next=x;
+            break;
+        }
+        temp=temp->next;
+    }
+    return head;
+}
+// Function to convert an array to a linked list
+Node* convertArrToLL(const vector<int>& arr) {
+    if (arr.empty()) return nullptr;   // If the array is empty, return nullptr
+    Node* head = new Node(arr[0]);     // Create the head node
+    Node* current = head;              // Pointer to the current node
+
+    // Loop through the array and create the linked list
+    for (size_t i = 1; i < arr.size(); ++i) {
+        current->next = new Node(arr[i]);  // Create the next node
+        current = current->next;           // Move to the next node
+    }
+    return head;
+}
+
+int main() {
+    vector<int> arr = {12, 5, 8, 77};  // Initialize an array of integers
+    Node* head = convertArrToLL(arr);  // Convert the array to a linked list
+    head = removeHead(head);
+    printLL(head);
+    head = removetail(head);
+    printLL(head);
+    head = removeK(head,5);
+    printLL(head);
+    head = removeel(head,5);
+    printLL(head);
+    head= newhead(head,100);
+    printLL(head);
+    head= newtail(head,200);
+    printLL(head);// Print the remaining linked list
+    head= newpos(head,200,2);
+    printLL(head);
+    return 0;
+}
